@@ -18,20 +18,43 @@ class EventBlock(BaseBlock):
         self.display_event_info()
 
         self.place(x=x, y=y, width=block_width, height=event_height)
+        self.bind("<Double-Button-1>", self.open_add_event_window)
+        self.bind("<Button-3>", self.edit_event)
 
     def display_event_info(self):
         """Displays event title, location, and note inside the block."""
         parent_bg = self.cget("bg")  
         text_frame = tk.Frame(self, bg=parent_bg)
         text_frame.place(relx=0, rely=0, relwidth=1, relheight=1)
+        text_frame.bind("<Double-Button-1>", self.open_add_event_window)
+        text_frame.bind("<Button-3>", self.edit_event)
         
         event_title = tk.Label(text_frame, text=self.event.title, bg=parent_bg, fg="white", font=("Arial", 9, "bold"))
         event_title.pack(anchor="n", pady=(2, 0))
+        event_title.bind("<Double-Button-1>", self.open_add_event_window)
+        event_title.bind("<Button-3>", self.edit_event)
 
         if self.event.location:
             event_location = tk.Label(text_frame, text="At: " + self.event.location, bg=parent_bg, fg="white", font=("Arial", 7))
             event_location.pack(anchor="w", padx=5, pady=(2, 0))
+            event_title.bind("<Double-Button-1>", self.open_add_event_window)
+            event_title.bind("<Button-3>", self.edit_event)
 
         if self.event.note:
             event_note = tk.Label(text_frame, text=self.event.note, bg=parent_bg, fg="white", font=("Arial", 7, "italic"))
             event_note.pack(anchor="w", padx=5, pady=(2, 0))
+            event_title.bind("<Double-Button-1>", self.open_add_event_window)
+            event_title.bind("<Button-3>", self.edit_event)
+    
+    def delete_event(self):
+        if self.on_event_altered:
+            self.on_event_altered(self.event, action="delete")
+        self.event = None
+
+    def edit_event(self, event):
+        edit_options = tk.Menu(self, tearoff=0)
+
+        edit_options.add_command(label="Edit event", command=lambda: self.open_add_event_window(None))
+        edit_options.add_command(label="Delete event", command=lambda: self.delete_event())
+
+        edit_options.post(event.x_root, event.y_root)

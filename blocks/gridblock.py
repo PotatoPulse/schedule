@@ -17,3 +17,12 @@ class GridBlock(BaseBlock):
         self.on_event_altered = on_event_altered  
         
         self.bind("<Double-Button-1>", self.open_add_event_window)
+        self.bind("<Button-3>", self.edit_event)
+    
+    def edit_event(self, event):
+        edit_options = tk.Menu(self, tearoff=0)
+
+        edit_options.add_command(label="Add event", command=lambda: self.open_add_event_window(None))
+
+        edit_options.post(event.x_root, event.y_root)
+    
