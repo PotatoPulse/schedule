@@ -6,11 +6,11 @@ from schedule import Schedule
 from blocks.baseblock import BaseBlock
 
 class EventBlock(BaseBlock):
-    def __init__(self, parent, colors: dict, event, block_width: int, start_hour: int, x: int, y: int):
+    def __init__(self, parent, colors: dict, event, block_width: int, start_hour: int, x: int, y: int, on_event_altered=None):
         """Creates an event block positioned exactly based on quarter blocks."""
         print(f"Creating EventBlock for {event.title} at ({x}, {y})")
 
-        super().__init__(parent, width=block_width, height=1, bg=event.color, highlightthickness=1, bd=1, relief="solid", event=event, colors=colors)
+        super().__init__(parent, width=block_width, height=1, bg=event.color, highlightthickness=1, bd=1, relief="solid", event=event, colors=colors, on_event_altered=on_event_altered)
 
         self.num_blocks = max(1, event.duration // 15)
         event_height = self.num_blocks * 16  

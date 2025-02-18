@@ -8,10 +8,12 @@ from schedule import Schedule
 class BaseBlock(tk.Frame):
     """Parent class for Block and EventBlock to share common methods like event editing."""
     
-    def __init__(self, parent, width=100, height=16, bg="blue", borderwidth=1, event=None, colors=None, **kwargs):
+    def __init__(self, parent, width=100, height=16, bg="blue", borderwidth=1, event=None, colors=None, on_event_altered=None, start_day=None, **kwargs):
         super().__init__(parent, width=width, height=height, bg=bg, borderwidth=borderwidth, **kwargs)
         self.event = event
         self.colors = colors or {}
+        self.start_day = start_day if start_day else datetime.today()
+        self.on_event_altered = on_event_altered
 
         self.bind("<Enter>", self.on_hover)
         self.bind("<Leave>", self.on_leave)
@@ -101,10 +103,13 @@ class BaseBlock(tk.Frame):
                 warning_label.config(text="Title is required!", fg="red")  
                 return
 
-            event_datetime = datetime(
-                self.start_day.year, self.start_day.month, self.start_day.day + (self.col - 1),
-                self.start_hour + int((self.row - 2) / 4)
-            )
+            if self.event:
+                event_datetime = self.event.datetime
+            else:
+                event_datetime = datetime(
+                    self.start_day.year, self.start_day.month, self.start_day.day + (self.col - 2),
+                    self.start_hour + int((self.row - 2) / 4)
+                )
 
             try:
                 duration = int(hour_duration) * 60 + int(minute_duration)

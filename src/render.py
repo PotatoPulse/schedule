@@ -61,7 +61,7 @@ def render_schedule(
         if blocks_at_pos:
             block = blocks_at_pos[1]  # Get the first block (should be only one per cell)
             x, y = block.winfo_x(), block.winfo_y()  # Fetch real-time widget position
-            EventBlock(grid_container, colors, event, block_width, sched.start_hour, x=x, y=y)
+            EventBlock(grid_container, colors, event, block_width, sched.start_hour, x=x, y=y, on_event_altered=handle_event_altered)
         else:
             print(f"Warning: No block found at row {row}, col {col} for event {event.title}")
 
