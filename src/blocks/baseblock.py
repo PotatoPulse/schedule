@@ -12,7 +12,7 @@ class BaseBlock(tk.Frame):
         super().__init__(parent, width=width, height=height, bg=bg, borderwidth=borderwidth, **kwargs)
         self.event = event
         self.colors = colors or {}
-        self.start_day = start_day if start_day else datetime.today()
+        self.start_day = start_day if start_day else datetime.today() - timedelta(days=datetime.today().weekday())
         self.on_event_altered = on_event_altered
 
         self.bind("<Enter>", self.on_hover)
@@ -106,9 +106,12 @@ class BaseBlock(tk.Frame):
             if self.event:
                 event_datetime = self.event.datetime
             else:
-                event_datetime = datetime(
-                    self.start_day.year, self.start_day.month, self.start_day.day + (self.col - 2),
-                    self.start_hour + int((self.row - 2) / 4)
+                event_datetime = self.start_day + timedelta(days=self.col - 1)  # Adjust date correctly
+                event_datetime = event_datetime.replace(
+                    hour=self.start_hour + int((self.row - 2) / 4),
+                    minute=((self.row-2)%4)*15,
+                    second=0,
+                    microsecond=0
                 )
 
             try:
