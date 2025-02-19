@@ -55,12 +55,25 @@ def render_schedule(
         col = (event.datetime.date() - start_day.date()).days + 1  # +1 to match grid column index
         row = ((event.datetime.hour - sched.start_hour) * 4) + (event.datetime.minute // 15) + start_row  # Match quarter-hour grid
 
-        blocks_at_pos = grid_container.grid_slaves(row=row, column=col)  # Returns a list of widgets
+        print(f"Rendering Event: {event.title} at col={col}, row={row}")
+
+        blocks_at_pos = [
+            widget for widget in grid_container.grid_slaves(row=row, column=col)
+            if isinstance(widget, GridBlock)
+        ]
+
         print("blocks at pos: ", blocks_at_pos)
 
         if blocks_at_pos:
-            block = blocks_at_pos[1]  # Get the first block (should be only one per cell)
-            x, y = block.winfo_x(), block.winfo_y()  # Fetch real-time widget position
+            block = blocks_at_pos[0]  # The first valid GridBlock
+            
+            # Force Tkinter to update before fetching x, y positions
+            grid_container.update_idletasks()
+
+            x, y = block.winfo_x(), block.winfo_y()
+            
+            print(f"Creating EventBlock for {event.title} at ({x}, {y})")  # Debug output
+
             EventBlock(grid_container, colors, event, block_width, sched.start_hour, x=x, y=y, on_event_altered=handle_event_altered)
         else:
             print(f"Warning: No block found at row {row}, col {col} for event {event.title}")
