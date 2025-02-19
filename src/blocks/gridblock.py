@@ -7,8 +7,8 @@ from blocks.baseblock import BaseBlock
 
 
 class GridBlock(BaseBlock):
-    def __init__(self, parent, colors: dict, width=100, height=16, color="blue", row=0, col=0, event=None, on_event_altered=None, start_hour=8):
-        super().__init__(parent, width=width, height=height, bg=color, borderwidth=1, event=event, colors=colors, on_event_altered=on_event_altered)
+    def __init__(self, parent, colors: dict, width=100, height=16, color="blue", row=0, col=0, event=None, on_event_altered=None, start_day=None, start_hour=8):
+        super().__init__(parent, width=width, height=height, bg=color, borderwidth=1, event=event, colors=colors, start_day=start_day, on_event_altered=on_event_altered)
         self.grid(row=row, column=col, padx=2, pady=(0, 0))
         self.row = row
         self.col = col

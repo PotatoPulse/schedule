@@ -47,7 +47,7 @@ def render_schedule(
         for c in range(1, len(days_labels) + 1):
             block_padding = (4, 0) if (r - start_row) % 4 == 0 else (0, 0) # block padding for each hour
             block = GridBlock(grid_container, colors, width=block_width, height=16, color=colors["none_block"], row=r, col=c, 
-                  on_event_altered=handle_event_altered, start_hour=sched.start_hour).grid(padx=2, pady=block_padding)
+                  on_event_altered=handle_event_altered, start_day=start_day, start_hour=sched.start_hour).grid(padx=2, pady=block_padding)
 
     weekly_events = sched.get_weekly_events(start_day)
     

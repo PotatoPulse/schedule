@@ -6,18 +6,21 @@ from schedule import Schedule
 from blocks.baseblock import BaseBlock
 
 class EventBlock(BaseBlock):
-    def __init__(self, parent, colors: dict, event, block_width: int, start_hour: int, x: int, y: int, on_event_altered=None):
+    def __init__(self, parent, colors: dict, event: Event, block_width: int, start_hour: int, x: int, y: int, on_event_altered=None):
         """Creates an event block positioned exactly based on quarter blocks."""
         print(f"Creating EventBlock for {event.title} at ({x}, {y})")
 
-        super().__init__(parent, width=block_width, height=1, bg=event.color, highlightthickness=1, bd=1, relief="solid", event=event, colors=colors, on_event_altered=on_event_altered)
+        super().__init__(parent, width=block_width, height=1, bg=event.color, highlightthickness=0, bd=1, relief="solid", event=event, colors=colors, on_event_altered=on_event_altered)
 
+        # calculate the amount of full hours passed, because we need to match padding
+        num_pads = (event.datetime.minute + event.duration - 1) // 60
+        
         self.num_blocks = max(1, event.duration // 15)
-        event_height = self.num_blocks * 16  
+        event_height = self.num_blocks * 16
 
         self.display_event_info()
 
-        self.place(x=x, y=y, width=block_width, height=event_height)
+        self.place(x=x, y=y, width=block_width, height=event_height+num_pads*4)
         self.bind("<Double-Button-1>", self.open_add_event_window)
         self.bind("<Button-3>", self.edit_event)
 
